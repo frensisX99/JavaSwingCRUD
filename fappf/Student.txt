@@ -1,0 +1,92 @@
+
+
+public class Student {
+
+    private int id ;
+    private String Name ;
+    private String Lname ;
+    private String Email ;
+    private int age ;
+    private String Bday ;
+    private String Major ;
+    private String GPA ;
+
+    public Student(int id, String name, String lname, String email, int age, String bday, String major, String GPA) {
+        this.id = id;
+        Name = name;
+        Lname = lname;
+        Email = email;
+        this.age = age;
+        Bday = bday;
+        Major = major;
+        this.GPA = GPA;
+    }
+
+    public Student() {
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public String getLname() {
+        return Lname;
+    }
+
+    public void setLname(String lname) {
+        Lname = lname;
+    }
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getBday() {
+        return Bday;
+    }
+
+    public void setBday(String bday) {
+        Bday = bday;
+    }
+
+    public String getMajor() {
+        return Major;
+    }
+
+    public void setMajor(String major) {
+        Major = major;
+    }
+
+    public String getGPA() {
+        return GPA;
+    }
+
+    public void setGPA(String GPA) {
+        this.GPA = GPA;
+    }
+}

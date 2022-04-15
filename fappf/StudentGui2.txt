@@ -1,0 +1,176 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class StudentJavaGui2 extends JDialog  {
+
+    private JLabel lt1;
+    private JLabel lid;
+    private JTextField tf1, tf2, tf3, tf4, tf5, tf6, tf7 ;
+
+
+    public StudentJavaGui2(Student student)
+    {
+        createGUI(student);
+        if (student.getId() != -1) {
+            tf1.setText(student.getName());
+            tf2.setText(student.getLname());
+            tf3.setText(student.getEmail());
+            tf4.setText(String.valueOf(student.getAge()));
+            tf5.setText(student.getBday());
+            tf6.setText(student.getMajor());
+            tf7.setText(student.getGPA());
+            lt1.setText("Update Student");
+            lid.setText(String.valueOf(student.getId()));
+        }
+    }
+
+    private void createGUI(Student student) {
+        this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        this.setTitle("StudentAdd");
+        this.setSize(835,670);
+        this.setLayout(null);
+
+        // Title Label
+        JPanel mainPanel = new JPanel();
+        lt1 = new JLabel("Add a Student" );
+        lid = new JLabel() ;
+        lt1. setFont(new Font("Serif", Font.BOLD, 18));
+        lid. setFont(new Font("Serif", Font.BOLD, 18));
+        mainPanel.setBounds(100, 10, 500, 35);
+        mainPanel.add(lt1) ;
+        mainPanel.add(lid) ;
+
+        createNorthPanel();
+        // ubt1 and cbt2 panel
+        createButtonsPanel(student);
+        this.add(mainPanel) ;
+        this.setVisible(true);
+    }
+
+    private void createButtonsPanel(Student student) {
+        JPanel pn8 = new JPanel();
+        pn8.setLayout(new GridLayout(1,2,50,0));
+        pn8.setBounds(340,550,260, 50);
+
+        JButton saveButton = new JButton("Save") ;
+        saveButton.addActionListener(e -> {
+            StudentCon1 con1 = new StudentCon1();
+            if (validateStudentFields()) {
+                JOptionPane.showMessageDialog(null, "Check all fields");
+            }
+            else {
+                student.setName(tf1.getText());
+                student.setLname(tf2.getText());
+                student.setEmail(tf3.getText());
+                student.setAge(Integer.parseInt(tf4.getText()));
+                student.setBday(tf5.getText());
+                student.setMajor(tf6.getText());
+                student.setGPA(tf7.getText());
+                if (student.getId() == -1) {
+                    con1.add(student);
+                } else {
+                    con1.update(student);
+                }
+                this.dispose();
+                StudentJavaGui.table_load();
+            }
+        });
+
+        pn8.add(saveButton) ;
+        JButton clearbutton = new JButton("Clear") ;
+        clearbutton.addActionListener(e -> {
+            clearStudentFields();
+        } );
+        pn8.add(clearbutton) ;
+        this.add(pn8) ;
+    }
+
+    private void createNorthPanel() {
+        // First name label and textfield
+        JPanel pn1 = new JPanel();
+        JLabel l1 = new JLabel("First Name:");
+        tf1 = new JTextField();
+        pn1.setLayout(new GridLayout(1,2, 0, 0));
+        pn1.setBounds(100, 100, 500, 25);
+        pn1.add(l1) ;
+        pn1.add(tf1) ;
+        this.add(pn1) ;
+
+        // Last name label and textfield
+        JPanel pn2 = new JPanel();
+        JLabel l2 = new JLabel("Last Name:");
+        tf2 = new JTextField();
+        pn2.setLayout(new GridLayout(1,2, 0, 0));
+        pn2.setBounds(100, 150, 500, 25);
+        pn2.add(l2) ;
+        pn2.add(tf2) ;
+        this.add(pn2) ;
+
+        // email label and textfield
+        JPanel pn3 = new JPanel();
+        JLabel l3 = new JLabel("Email:");
+        tf3 = new JTextField();
+        pn3.setLayout(new GridLayout(1,2, 0, 0));
+        pn3.setBounds(100, 200, 500, 25);
+        pn3.add(l3) ;
+        pn3.add(tf3) ;
+        this.add(pn3) ;
+
+        // age label and textfield
+        JPanel pn4 = new JPanel();
+        JLabel l4 = new JLabel("Age:");
+        tf4 = new JTextField();
+        pn4.setLayout(new GridLayout(1,2, 0, 0));
+        pn4.setBounds(100, 250, 500, 25);
+        pn4.add(l4) ;
+        pn4.add(tf4) ;
+        this.add(pn4) ;
+
+        // birthday label and textfield
+        JPanel pn5 = new JPanel();
+        JLabel l5 = new JLabel("Birthday:");
+        tf5 = new JTextField();
+        pn5.setLayout(new GridLayout(1,2, 0, 0));
+        pn5.setBounds(100, 300, 500, 25);
+        pn5.add(l5) ;
+        pn5.add(tf5) ;
+        this.add(pn5) ;
+
+        // major label and textfield
+        JPanel pn6 = new JPanel();
+        JLabel l6 = new JLabel("Major:");
+        tf6 = new JTextField();
+        pn6.setLayout(new GridLayout(1,2, 0, 0));
+        pn6.setBounds(100, 350, 500, 25);
+        pn6.add(l6) ;
+        pn6.add(tf6) ;
+        this.add(pn6) ;
+
+        // gpa label and textfield
+        JPanel pn7 = new JPanel();
+        JLabel l7 = new JLabel("GPA:");
+        tf7 = new JTextField();
+        pn7.setLayout(new GridLayout(1,2, 0, 0));
+        pn7.setBounds(100, 400, 500, 25);
+        pn7.add(l7) ;
+        pn7.add(tf7) ;
+        this.add(pn7) ;
+    }
+
+    private void clearStudentFields() {
+        tf1.setText("");
+        tf2.setText("");
+        tf3.setText("");
+        tf4.setText("");
+        tf5.setText("");
+        tf6.setText("");
+        tf7.setText("");
+    }
+
+    private boolean validateStudentFields() {
+        return tf1.getText().isEmpty()
+                || tf2.getText().isEmpty()
+                || tf3.getText().isEmpty()
+                || tf4.getText().isEmpty() || tf5.getText().isEmpty() || tf6.getText().isEmpty() || tf7.getText().isEmpty();
+    }
+}

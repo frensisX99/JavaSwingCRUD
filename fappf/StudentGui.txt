@@ -1,0 +1,181 @@
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List ;
+
+public class StudentJavaGui extends JFrame {
+
+    private static JTable table1 ;
+
+    public static void main(String[] args) {
+        StudentDatabase.getConnection();
+         new StudentJavaGui();
+    }
+
+    public StudentJavaGui()
+    {
+        initComponents();
+        table_load() ;
+    }
+
+    private void initComponents() {
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setTitle("StudentApp");
+        this.setSize(835, 670);
+        this.setLayout(null);
+
+        //  title
+        JLabel title1 = new JLabel("My Student App");
+        title1.setFont((new Font("Serif", Font.BOLD, 20)));
+        JPanel panel = new JPanel();
+        panel.setBounds(320, 10, 150, 150);
+        panel.add(title1);
+
+        // used to create main table
+        table1 = new JTable();
+        table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table1.getTableHeader().setReorderingAllowed(false);
+        JScrollPane sp = new JScrollPane(table1, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        sp.setBounds(10, 60, 800, 500);
+        this.add(sp);
+
+        // the panel used for the buttons
+        JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayout(1, 3, 20, 0));
+        panel1.setBounds(240, 570, 400, 50);
+
+        // used for the add button
+        JButton addButton = new JButton();
+        addButton.setSize(20, 20);
+        addButton.setText("Add");
+        addButton.addActionListener(e -> {
+            addNewStudent();
+        });
+        panel1.add(addButton);
+
+        // used for the update button
+        JButton updateButton = new JButton();
+        updateButton.setSize(20, 20);
+        updateButton.setText("Update");
+        panel1.add(updateButton);
+
+        // used for the delete button
+        JButton deleteButton = new JButton();
+        deleteButton.setSize(20, 20);
+        deleteButton.setText("Delete");
+        panel1.add(deleteButton);
+        // adding to frame
+        this.add(panel);
+        this.add(panel1);
+        this.setVisible(true);
+
+        // Add button Action Listener
+
+        updateButton.addActionListener(e -> {
+            updateStudent();
+
+        });
+        deleteButton.addActionListener(e -> {
+            deleteStudent();
+        });
+        table1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                super.mouseClicked(mouseEvent);
+                if (mouseEvent.getClickCount() == 2) {
+                    updateStudent();
+                }
+
+            }
+        });
+
+    }
+
+    // tabela
+    public static DefaultTableModel getData() {
+        StudentDatabase.getConnection();
+        StudentCon1 con1 = new StudentCon1();
+        List<Student> list = con1.list();
+        DefaultTableModel model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+
+                return false;
+            }
+        };
+
+        Object[] columnsName = new Object[8];
+        columnsName[0] = "Id";
+        columnsName[1] = "FirstName";
+        columnsName[2] = "LastName";
+        columnsName[3] = "Email";
+        columnsName[4] = "Age";
+        columnsName[5] = "Birthday";
+        columnsName[6] = "Major";
+        columnsName[7] = "GPA";
+        model.setColumnIdentifiers(columnsName);
+
+        Object[] rowData = new Object[8];
+
+        for (Student st : list) {
+            rowData[0] = st.getId();
+            rowData[1] = st.getName();
+            rowData[2] = st.getLname();
+            rowData[3] = st.getEmail();
+            rowData[4] = st.getAge();
+            rowData[5] = st.getBday();
+            rowData[6] = st.getMajor();
+            rowData[7] = st.getGPA();
+            model.addRow(rowData);
+            model.fireTableDataChanged();
+        }
+        return model;
+    }
+
+    public static void table_load() {
+        DefaultTableModel model = getData() ;
+        table1.setModel(model);
+        table1.setVisible(true);
+        table1.revalidate();
+        table1.repaint();
+    }
+
+    private void addNewStudent() {
+        Student student = new Student();
+        new StudentJavaGui2(student);
+    }
+
+    private void updateStudent() {
+        int selectedRowIndex = table1.getSelectedRow();
+        if (selectedRowIndex == -1) {
+            JOptionPane.showMessageDialog(null, "No rows selected");
+        } else {
+            StudentCon1 con1 = new StudentCon1();
+            Student student = con1.get((Integer) table1.getModel().getValueAt(selectedRowIndex, 0));
+            new StudentJavaGui2(student);
+        }
+    }
+    private void deleteStudent() {
+
+        int selectedRowIndex = table1.getSelectedRow();
+        if (selectedRowIndex == -1) {
+            JOptionPane.showMessageDialog(null, "Select a Student you want to delete");
+        } else {
+            int id = (int) table1.getModel().getValueAt(selectedRowIndex, 0);
+            StudentCon1 con1 = new StudentCon1();
+            con1.delete(id);
+            table_load();
+        }
+    }
+
+}
+
+
+

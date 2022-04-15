@@ -1,0 +1,10 @@
+import java.util.List;
+
+public interface StudentCon {
+
+    public void add(Student add) ;
+    public void update(Student update) ;
+    public void delete(int id) ;
+    public Student get(int id) ;
+    public List<Student> list();
+}

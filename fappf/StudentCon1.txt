@@ -1,0 +1,155 @@
+import javax.lang.model.element.Name;
+import javax.swing.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class StudentCon1 implements StudentCon {
+
+
+    @Override
+    public void add(Student add) {
+
+        try {
+            Connection con = StudentDatabase.getConnection();
+            String sql = "INSERT INTO studentinfo (name, lname, email, age, bday, major, gpa) VALUES (?,?,?,?,?,?,?)";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, add.getName());
+            pst.setString(2, add.getLname());
+            pst.setString(3, add.getEmail());
+            pst.setInt(4, add.getAge());
+            pst.setString(5, add.getBday());
+            pst.setString(6, add.getMajor());
+            pst.setString(7, add.getGPA());
+
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Student is Successfully Saved");
+        }
+        catch (Exception e)
+        { e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error Adding The Student");
+        }
+    }
+
+    @Override
+    public void update(Student update) {
+
+        try {
+            Connection con = StudentDatabase.getConnection();
+            String sql = "update studentinfo set name = ?, lname = ?, email = ?, age = ?, bday = ?, major = ?, gpa = ? where id = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, update.getName());
+            pst.setString(2, update.getLname());
+            pst.setString(3, update.getEmail());
+            pst.setInt(4, update.getAge());
+            pst.setString(5, update.getBday());
+            pst.setString(6, update.getMajor());
+            pst.setString(7, update.getGPA());
+
+            // added
+            pst.setInt(8, update.getId());
+
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Student is Successfully Updated");
+        }
+        catch (Exception e)
+        { e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error Updating The Student");
+        }
+    }
+
+
+    @Override
+    public void delete(int id) {
+        try {
+            Connection con = StudentDatabase.getConnection();
+            String sql = "delete from studentinfo where id = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, id);
+
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Student is Deleted Successfully");
+
+        }  catch (Exception e)
+        { e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error Deleting The Student");
+        }
+
+
+    }
+
+    @Override
+    public Student get(int id) {
+//        Student student = null;
+        Student student = new Student() ;
+        try {
+            Connection con = StudentDatabase.getConnection();
+            String sql = "select * from studentinfo where id = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, id); // hiqet
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+//                student.setId(rs.getInt("id")); // hiqet
+                student.setId(rs.getInt("id"));
+                student.setName(rs.getString("name"));
+                student.setLname(rs.getString("lname"));
+                student.setEmail(rs.getString("email"));
+                student.setAge(rs.getInt("age"));
+                student.setBday(rs.getString("bday"));
+                student.setMajor(rs.getString("major"));
+                student.setGPA(rs.getString("gpa"));
+//               String name =  rs.getString("name");
+//               String lname = rs.getString("lname");
+//               String email = rs.getString("email");
+//               int age = rs.getInt("age");
+//               String bday = rs.getString("bday");
+//               String major = rs.getString("major");
+//               String gpa = rs.getString("gpa");
+//               student = new Student(id, name, lname, email, age, bday, major, gpa);
+
+            }
+
+        }  catch (Exception e)
+        { e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error Finding Student");
+        }
+        return student ;
+    }
+
+
+
+    @Override
+    public List<Student> list() {
+        List<Student> list = new ArrayList<Student>() ;
+        try{
+            Connection con = StudentDatabase.getConnection() ;
+            String sql = "select * from studentinfo ";
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+
+            while(rs.next())
+           {
+
+                Student student = new Student() ;
+
+                student.setId(rs.getInt("id"));
+                student.setName(rs.getString("name"));
+                student.setLname(rs.getString("lname"));
+                student.setEmail(rs.getString("email"));
+                student.setAge(rs.getInt("age"));
+                student.setBday(rs.getString("bday"));
+                student.setEmail(rs.getString("email"));
+                student.setMajor(rs.getString("major"));
+                student.setGPA(rs.getString("gpa"));
+                list.add(student);
+            }
+        } catch (Exception e)
+        { e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error Searching Student");
+        }
+        return list;
+    }
+}
